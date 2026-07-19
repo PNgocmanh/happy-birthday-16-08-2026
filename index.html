@@ -2,7 +2,8 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" id="themeColorMeta" content="#050914">
 <title>Sinh nhật Em yêu ❤️</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,8 +25,9 @@
     --glow:#6ea8ff;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
-  html,body{height:100%;overflow-x:hidden;}
-  body{font-family:'Quicksand',sans-serif;color:var(--plum);background:var(--pink-1);}
+  html,body{height:100%;overflow-x:hidden;overscroll-behavior-y:none;background:var(--night-1);}
+  body{font-family:'Quicksand',sans-serif;color:var(--plum);background:var(--night-1);}
+  body.on-main{background:var(--pink-1);}
 
   /* ---------- INTRO ---------- */
   #intro{
@@ -134,7 +136,7 @@
   .sphere-block{margin-top:clamp(40px,7vw,70px);}
   .sphere-hint{text-align:center;color:#b07c8e;font-size:14px;margin-bottom:14px;}
   #sphere-stage{position:relative;width:100%;height:min(66vh,520px);
-    border-radius:26px;overflow:hidden;cursor:grab;
+    border-radius:26px;overflow:hidden;cursor:grab;touch-action:none;
     background:radial-gradient(circle at 50% 40%, #fff0f5, #ffe0ec 75%);
     box-shadow:inset 0 0 60px rgba(232,93,132,.15);}
   #sphere-stage.grabbing{cursor:grabbing;}
@@ -528,6 +530,23 @@
     if(e.changedTouches.length) tryEnter(e.changedTouches[0].clientX,e.changedTouches[0].clientY);
   });
 
+  // Ép về đầu trang, lặp lại vài lần để thắng mọi việc trình duyệt di động
+  // tự cuộn lại theo phần tử đang focus hoặc theo layout đổi trong lúc chuyển cảnh.
+  function forceScrollTop(){
+    if(document.activeElement && document.activeElement.blur) document.activeElement.blur();
+    window.scrollTo(0,0);
+    document.documentElement.scrollTop=0;
+    document.body.scrollTop=0;
+  }
+  function forceScrollTopBurst(){
+    forceScrollTop();
+    requestAnimationFrame(forceScrollTop);
+    setTimeout(forceScrollTop,50);
+    setTimeout(forceScrollTop,300);
+    setTimeout(forceScrollTop,900);
+    setTimeout(forceScrollTop,1800);
+  }
+
   let entered=false;
   function enterMain(){
     if(entered)return; entered=true;
@@ -535,8 +554,10 @@
     flash.style.opacity='1';
     setTimeout(()=>{
       introEl.style.opacity='0';
-      window.scrollTo(0,0);                       // luôn hiện đầu trang
+      forceScrollTopBurst();                       // luôn hiện đầu trang
       document.getElementById('main').classList.add('show');
+      document.body.classList.add('on-main');
+      const tcm=document.getElementById('themeColorMeta'); if(tcm) tcm.content='#fff5f8';
       setTimeout(()=>{introEl.style.display='none';document.getElementById('warp').style.opacity='0';},1200);
       startPartyFx();
       if(window.startAlbum) window.startAlbum();   // tự phát nhạc
@@ -547,6 +568,7 @@
   window.returnToIntro = function(){
     const warp = document.getElementById('warp');
     warp.style.opacity='1';
+    forceScrollTopBurst();
     setTimeout(()=>{
       introEl.style.display='block';
       introEl.style.opacity='0';
@@ -556,8 +578,10 @@
       // đưa góc nhìn về hướng chưa thấy ngôi sao (phải xoay tìm lại)
       targetY = 0; targetX = 0;
       requestAnimationFrame(()=>{ introEl.style.opacity='1'; });
-      window.scrollTo(0,0);
+      forceScrollTopBurst();
       document.getElementById('main').classList.remove('show');
+      document.body.classList.remove('on-main');
+      const tcm=document.getElementById('themeColorMeta'); if(tcm) tcm.content='#050914';
       setTimeout(()=>{ warp.style.opacity='0'; }, 800);
     }, 400);
   };
