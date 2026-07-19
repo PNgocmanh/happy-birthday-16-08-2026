@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Sinh nhật Em yêu ❤️</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Quicksand:wght@400;500;600;700&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* Trang chính - hồng ngọt */
+    --pink-1:#fff5f8;
+    --pink-2:#ffe3ec;
+    --pink-3:#ffc2d6;
+    --rose:#ff7aa2;
+    --rose-deep:#e85d84;
+    --plum:#7a3b52;
+    --cream:#fffafc;
+    /* Intro - xanh đêm */
+    --night-1:#050914;
+    --night-2:#0a1430;
+    --star:#cfe0ff;
+    --glow:#6ea8ff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;overflow-x:hidden;}
+  body{font-family:'Quicksand',sans-serif;color:var(--plum);background:var(--pink-1);}
+
+  /* ---------- INTRO ---------- */
+  #intro{
+    position:fixed;inset:0;z-index:100;
+    background:radial-gradient(ellipse at 50% 40%, var(--night-2), var(--night-1) 70%);
+    overflow:hidden;cursor:grab;transition:opacity 1.2s ease;
+  }
+  #intro.grabbing{cursor:grabbing;}
+  #intro canvas{display:block;}
+  .intro-hint{
+    position:absolute;left:50%;bottom:9%;transform:translateX(-50%);
+    color:var(--star);font-size:clamp(14px,3.6vw,18px);letter-spacing:.5px;
+    text-align:center;width:90%;pointer-events:none;
+    text-shadow:0 0 16px rgba(110,168,255,.6);
+    animation:hintPulse 2.6s ease-in-out infinite;
+  }
+  @keyframes hintPulse{0%,100%{opacity:.45}50%{opacity:1}}
+  .intro-title{
+    position:absolute;top:8%;left:50%;transform:translateX(-50%);
+    text-align:center;width:92%;pointer-events:none;color:#dbe7ff;
+    font-family:'Playfair Display',serif;font-style:italic;
+    font-size:clamp(20px,5.5vw,34px);text-shadow:0 0 24px rgba(110,168,255,.5);
+    opacity:.9;
+  }
+  #enterFlash{
+    position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;
+    transition:opacity .5s ease;
+  }
+
+  /* ---------- WARP OVERLAY ---------- */
+  #warp{position:fixed;inset:0;z-index:99;pointer-events:none;opacity:0;
+    background:radial-gradient(circle at 50% 50%, #ffd9e6 0%, #ff9dbd 40%, transparent 72%);
+    transition:opacity .6s ease;}
+
+  /* ---------- TRANG CHÍNH ---------- */
+  #main{
+    position:relative;z-index:1;opacity:0;transform:translateY(20px);
+    transition:opacity 1.4s ease .3s, transform 1.4s ease .3s;
+    background:
+      radial-gradient(1200px 600px at 80% -5%, var(--pink-2), transparent 60%),
+      radial-gradient(1000px 500px at 0% 10%, #ffeaf1, transparent 55%),
+      linear-gradient(180deg, var(--pink-1), #fff 60%, var(--pink-1));
+    min-height:100vh;
+  }
+  #main.show{opacity:1;transform:none;}
+  #fx-layer{position:fixed;inset:0;pointer-events:none;z-index:5;overflow:hidden;}
+
+  .wrap{max-width:1000px;margin:0 auto;padding:0 22px;}
+  section{position:relative;z-index:6;padding:clamp(56px,10vw,110px) 0;}
+
+  /* Phần 1 - Lời chúc */
+  .hero{text-align:center;}
+  .eyebrow{font-family:'Dancing Script',cursive;color:var(--rose-deep);
+    font-size:clamp(22px,5vw,30px);}
+  .hero h1{
+    font-family:'Playfair Display',serif;font-weight:900;
+    font-size:clamp(34px,8vw,68px);line-height:1.08;color:var(--plum);
+    margin:6px 0 18px;}
+  .hero h1 .heart{color:var(--rose-deep);display:inline-block;
+    animation:beat 1.4s ease-in-out infinite;}
+  @keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.22)}30%{transform:scale(1)}}
+  .hero p.msg{font-size:clamp(15px,3.8vw,19px);line-height:1.9;max-width:620px;
+    margin:0 auto 34px;color:#8a5266;}
+  .hero-photo{
+    width:min(340px,80vw);aspect-ratio:4/5;margin:0 auto;border-radius:24px;
+    background:linear-gradient(135deg,var(--pink-3),#ffd6e4);
+    display:flex;align-items:center;justify-content:center;color:#fff;
+    box-shadow:0 20px 60px rgba(232,93,132,.35);position:relative;overflow:hidden;
+    border:8px solid #fff;}
+  .hero-photo::after{content:"Thay ảnh của em vào đây 📷";position:absolute;
+    font-size:14px;font-weight:600;opacity:.9;text-align:center;padding:0 20px;}
+  .hero-photo img{width:100%;height:100%;object-fit:cover;}
+
+  /* Phần 2 - Timeline album */
+  .sec-head{text-align:center;margin-bottom:clamp(40px,7vw,64px);}
+  .sec-head .eyebrow{display:block;}
+  .sec-head h2{font-family:'Playfair Display',serif;font-size:clamp(28px,6.5vw,46px);
+    color:var(--plum);margin-top:4px;}
+  .timeline{position:relative;padding:10px 0;}
+  .timeline::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:3px;
+    transform:translateX(-50%);
+    background:linear-gradient(var(--rose),var(--pink-3));border-radius:3px;}
+  .tl-item{position:relative;width:50%;padding:14px 40px;box-sizing:border-box;}
+  .tl-item:nth-child(odd){left:0;text-align:right;}
+  .tl-item:nth-child(even){left:50%;text-align:left;}
+  .tl-dot{position:absolute;top:26px;width:18px;height:18px;border-radius:50%;
+    background:var(--rose-deep);border:4px solid #fff;box-shadow:0 0 0 4px var(--pink-3);z-index:2;}
+  .tl-item:nth-child(odd) .tl-dot{right:-9px;}
+  .tl-item:nth-child(even) .tl-dot{left:-9px;}
+  .tl-card{background:#fff;border-radius:20px;padding:14px;
+    box-shadow:0 12px 34px rgba(232,93,132,.18);display:inline-block;
+    max-width:340px;text-align:left;}
+  .tl-photo{width:100%;aspect-ratio:4/3;border-radius:14px;overflow:hidden;
+    background:linear-gradient(135deg,var(--pink-3),#ffdbe7);
+    display:flex;align-items:center;justify-content:center;color:#fff;
+    font-weight:600;font-size:13px;text-align:center;padding:10px;margin-bottom:12px;}
+  .tl-photo img{width:100%;height:100%;object-fit:cover;}
+  .tl-date{font-family:'Dancing Script',cursive;color:var(--rose-deep);
+    font-size:22px;line-height:1;}
+  .tl-card h3{font-size:16px;margin:4px 0 6px;color:var(--plum);}
+  .tl-card p{font-size:14px;line-height:1.6;color:#8a5266;}
+  .tl-item.reveal{opacity:0;transform:translateY(30px);transition:.7s ease;}
+  .tl-item.reveal.in{opacity:1;transform:none;}
+
+  /* Quả cầu ảnh 3D */
+  .sphere-block{margin-top:clamp(40px,7vw,70px);}
+  .sphere-hint{text-align:center;color:#b07c8e;font-size:14px;margin-bottom:14px;}
+  #sphere-stage{position:relative;width:100%;height:min(66vh,520px);
+    border-radius:26px;overflow:hidden;cursor:grab;
+    background:radial-gradient(circle at 50% 40%, #fff0f5, #ffe0ec 75%);
+    box-shadow:inset 0 0 60px rgba(232,93,132,.15);}
+  #sphere-stage.grabbing{cursor:grabbing;}
+  #sphere-stage canvas{display:block;}
+  .photo-modal{position:absolute;inset:0;z-index:10;display:none;
+    align-items:center;justify-content:center;padding:20px;
+    background:rgba(122,59,82,.35);backdrop-filter:blur(6px);}
+  .photo-modal.show{display:flex;animation:modalIn .35s ease;}
+  @keyframes modalIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+  .photo-modal-inner{background:#fff;border-radius:22px;max-width:340px;width:100%;
+    padding:16px;box-shadow:0 24px 60px rgba(232,93,132,.4);position:relative;text-align:center;}
+  .modal-close{position:absolute;top:10px;right:10px;width:34px;height:34px;border:none;
+    border-radius:50%;background:var(--pink-2);color:var(--rose-deep);font-size:16px;
+    cursor:pointer;z-index:2;font-weight:700;}
+  .modal-photo{width:100%;aspect-ratio:4/3;border-radius:16px;overflow:hidden;margin-bottom:14px;
+    display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;
+    background:linear-gradient(135deg,var(--rose),var(--pink-3));}
+  .modal-photo img{width:100%;height:100%;object-fit:cover;}
+  .modal-date{font-family:'Dancing Script',cursive;color:var(--rose-deep);font-size:24px;line-height:1;}
+  .photo-modal-inner h3{color:var(--plum);margin:4px 0 8px;font-size:18px;}
+  .photo-modal-inner p{color:#8a5266;font-size:14px;line-height:1.7;}
+
+  /* Phần 3 - Âm nhạc */
+  .music{max-width:520px;margin:0 auto;background:#fff;border-radius:28px;
+    padding:clamp(24px,5vw,38px);box-shadow:0 18px 50px rgba(232,93,132,.25);
+    text-align:center;}
+  .vinyl{width:clamp(150px,44vw,190px);aspect-ratio:1;margin:0 auto 20px;
+    border-radius:50%;position:relative;
+    background:repeating-radial-gradient(circle at 50% 50%, #2a1a22 0 4px, #3a2530 4px 6px);
+    box-shadow:0 14px 40px rgba(0,0,0,.35);animation:spin 5s linear infinite;
+    animation-play-state:paused;}
+  .vinyl.playing{animation-play-state:running;}
+  .vinyl::before{content:"";position:absolute;inset:0;margin:auto;
+    width:44%;height:44%;border-radius:50%;
+    background:linear-gradient(135deg,var(--rose),var(--pink-3));
+    display:flex;}
+  .vinyl::after{content:"♪";position:absolute;inset:0;display:flex;
+    align-items:center;justify-content:center;color:#fff;font-size:30px;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .track-name{font-family:'Playfair Display',serif;font-size:20px;margin-bottom:4px;color:var(--plum);}
+  .track-sub{font-size:13px;color:#b07c8e;margin-bottom:18px;}
+  .player{display:flex;align-items:center;gap:14px;justify-content:center;}
+  .play-btn.play-main{width:60px;height:60px;font-size:24px;}
+  .play-btn:not(.play-main){width:46px;height:46px;font-size:16px;
+    background:linear-gradient(135deg,var(--pink-3),var(--rose));}
+  .music .progress{margin:18px auto 0;max-width:100%;}
+  .play-btn{width:60px;height:60px;border-radius:50%;border:none;cursor:pointer;
+    background:linear-gradient(135deg,var(--rose),var(--rose-deep));color:#fff;
+    font-size:24px;box-shadow:0 8px 22px rgba(232,93,132,.5);flex-shrink:0;
+    transition:transform .15s;}
+  .play-btn:active{transform:scale(.92);}
+  .progress{flex:1;height:8px;background:var(--pink-2);border-radius:8px;
+    overflow:hidden;cursor:pointer;}
+  .progress .bar{height:100%;width:0;background:linear-gradient(90deg,var(--rose),var(--rose-deep));}
+  .playlist{margin-top:20px;text-align:left;display:flex;flex-direction:column;gap:8px;}
+  .playlist button{background:var(--pink-1);border:1.5px solid var(--pink-2);
+    border-radius:12px;padding:10px 14px;text-align:left;cursor:pointer;
+    font-family:'Quicksand',sans-serif;font-size:14px;color:var(--plum);
+    transition:.2s;}
+  .playlist button:hover{border-color:var(--rose);}
+  .playlist button.active{background:var(--pink-2);border-color:var(--rose-deep);font-weight:600;}
+  .music-hint{font-size:12px;color:#c79aab;margin-top:14px;}
+
+  /* Footer */
+  footer{text-align:center;padding:70px 20px 90px;position:relative;z-index:6;}
+  footer .sign{font-family:'Dancing Script',cursive;
+    font-size:clamp(38px,10vw,64px);color:var(--rose-deep);
+    text-shadow:0 4px 20px rgba(232,93,132,.35);animation:beat 1.6s ease-in-out infinite;}
+  footer small{display:block;margin-top:10px;color:#c79aab;font-size:13px;}
+  .back-intro{
+    margin-top:26px;padding:13px 28px;border:none;border-radius:30px;cursor:pointer;
+    font-family:'Quicksand',sans-serif;font-weight:600;font-size:15px;color:#dbe7ff;
+    background:linear-gradient(135deg,#0a1430,#1a2a55);
+    box-shadow:0 10px 30px rgba(10,20,48,.4);transition:transform .15s, box-shadow .2s;
+    border:1px solid rgba(110,168,255,.35);}
+  .back-intro:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(10,20,48,.55);}
+  .back-intro:active{transform:scale(.96);}
+
+  /* Falling hearts / petals */
+  .fall{position:absolute;top:-40px;font-size:20px;opacity:.85;
+    animation:fallAnim linear forwards;pointer-events:none;}
+  @keyframes fallAnim{
+    to{transform:translateY(105vh) rotate(360deg);opacity:0;}
+  }
+
+  /* Mobile timeline -> 1 cột */
+  @media(max-width:640px){
+    .timeline::before{left:20px;}
+    .tl-item{width:100%;left:0!important;text-align:left!important;padding:14px 14px 14px 46px;}
+    .tl-item .tl-dot{left:12px!important;right:auto!important;}
+    .tl-card{max-width:100%;}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= INTRO ================= -->
+<div id="intro">
+  <div class="intro-title">Có một điều bất ngờ đang chờ em giữa những vì sao...</div>
+  <div class="intro-hint">✨ Chạm và kéo để xoay không gian &middot; tìm ngôi sao đặc biệt nhất để bước vào 💫</div>
+  <div id="enterFlash"></div>
+</div>
+<div id="warp"></div>
+
+<!-- ================= TRANG CHÍNH ================= -->
+<main id="main">
+  <div id="fx-layer"></div>
+
+  <!-- PHẦN 1: LỜI CHÚC -->
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Chúc mừng sinh nhật</span>
+      <h1>Em yêu của anh <span class="heart">❤</span></h1>
+      <p class="msg">Chúc em tuổi mới thật nhiều sức khỏe, luôn vui vẻ và bình an.
+        Mong em sẽ kiên định với những thứ mình chọn, anh tin em.
+        Cảm ơn em vì đã ở bên, yêu thương và cùng anh đi qua mỗi ngày.
+        Mong rằng năm nay và mãi về sau, chúng ta vẫn nắm tay nhau đi thật xa.</p>
+      <div class="hero-photo"><!-- <img src="anh1.jpg" alt=""> --></div>
+    </div>
+  </section>
+
+  <!-- PHẦN 2: TIMELINE ALBUM -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Album kỷ niệm</span>
+        <h2>Hành trình của chúng ta</h2>
+      </div>
+      <div class="timeline" id="timeline">
+        <div class="tl-item reveal">
+          <span class="tl-dot"></span>
+          <div class="tl-card">
+            <div class="tl-photo"><!-- <img src="km1.jpg"> -->Ảnh kỷ niệm 1</div>
+            <div class="tl-date">Ngày đầu gặp nhau</div>
+            <h3>Lần đầu mình quen nhau</h3>
+            <p>Nơi bắt đầu của mọi thứ. Thay ngày tháng và câu chuyện của hai đứa vào đây.</p>
+          </div>
+        </div>
+        <div class="tl-item reveal">
+          <span class="tl-dot"></span>
+          <div class="tl-card">
+            <div class="tl-photo"><!-- <img src="km2.jpg"> -->Ảnh kỷ niệm 2</div>
+            <div class="tl-date">Chuyến đi đầu tiên</div>
+            <h3>Cùng nhau đi chơi xa</h3>
+            <p>Một kỷ niệm khó quên. Kể lại khoảnh khắc đáng nhớ ở đây.</p>
+          </div>
+        </div>
+        <div class="tl-item reveal">
+          <span class="tl-dot"></span>
+          <div class="tl-card">
+            <div class="tl-photo"><!-- <img src="km3.jpg"> -->Ảnh kỷ niệm 3</div>
+            <div class="tl-date">Dịp đặc biệt</div>
+            <h3>Ngày kỷ niệm yêu nhau</h3>
+            <p>Ghi lại cột mốc ý nghĩa của hai người tại đây.</p>
+          </div>
+        </div>
+        <div class="tl-item reveal">
+          <span class="tl-dot"></span>
+          <div class="tl-card">
+            <div class="tl-photo"><!-- <img src="km4.jpg"> -->Ảnh kỷ niệm 4</div>
+            <div class="tl-date">Hôm nay</div>
+            <h3>Sinh nhật của em</h3>
+            <p>Và còn thật nhiều kỷ niệm nữa đang chờ phía trước ❤</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUẢ CẦU ẢNH 3D -->
+      <div class="sphere-block">
+        <div class="sec-head" style="margin-top:20px">
+          <span class="eyebrow">Thư viện kỷ niệm</span>
+          <h2>Chạm vào từng khoảnh khắc</h2>
+        </div>
+        <p class="sphere-hint">🌐 Kéo để xoay quả cầu &middot; chạm vào một tấm ảnh để xem kỷ niệm</p>
+        <div id="sphere-stage">
+          <div id="photo-modal" class="photo-modal">
+            <div class="photo-modal-inner">
+              <button class="modal-close" id="modalClose">✕</button>
+              <div class="modal-photo" id="modalPhoto"></div>
+              <div class="modal-date" id="modalDate"></div>
+              <h3 id="modalTitle"></h3>
+              <p id="modalText"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Giai điệu dành cho em</span>
+        <h2>Bài hát của chúng mình</h2>
+      </div>
+      <div class="music">
+        <div class="vinyl" id="vinyl"></div>
+        <div class="track-name" id="trackName">Sẵn sàng phát nhạc</div>
+        <div class="track-sub" id="trackSub">Nhạc sẽ tự phát khi vào trang</div>
+        <div class="player">
+          <button class="play-btn" id="prevBtn" title="Bài trước">⏮</button>
+          <button class="play-btn play-main" id="playBtn">▶</button>
+          <button class="play-btn" id="nextBtn" title="Bài sau">⏭</button>
+        </div>
+        <div class="progress" id="progress"><div class="bar" id="bar"></div></div>
+        <div class="playlist" id="playlist">
+          <button data-src="music/1-happy-birthday-piano.mp3" data-name="Happy Birthday (Piano Version)" data-artist="Bản piano nhẹ nhàng">🎵 Happy Birthday — Piano Version</button>
+          <button data-src="music/2-happy-birthday-to-you.mp3" data-name="Happy Birthday to You" data-artist="AMEE x Hoàng Dũng x Obito x Hứa Kim Tuyền">🎵 Happy Birthday to You (Always 14)</button>
+          <button data-src="music/3-day-la-bai-hat-sinh-nhat.mp3" data-name="Đây là bài hát sinh nhật" data-artist="Bùi Công Nam x Cải Lộ Nướng x Fillinus">🎵 ĐÂY LÀ BÀI HÁT SINH NHẬT</button>
+          <button data-src="music/4-i-love-you.mp3" data-name="I Love You (Special Version)" data-artist="Bùi Công Nam x Binz">🎵 'I LOVE YOU' (Always, In Every Way)</button>
+        </div>
+        <div class="music-hint">Giữ thư mục <code>music</code> cùng chỗ với file HTML để nghe được nhạc.</div>
+      </div>
+      <audio id="audio"></audio>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="sign">Chúc mừng sinh nhật</div>
+    <small>Made by anh người yêu</small>
+    <button class="back-intro" id="backIntro">🌌 Quay lại không gian</button>
+  </footer>
+</main>
+
+<!-- ================= SCRIPTS ================= -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<script>
+/* ---------- INTRO: KHÔNG GIAN 3D ---------- */
+(function(){
+  const introEl = document.getElementById('intro');
+  const flash = document.getElementById('enterFlash');
+  const isMobile = window.matchMedia('(max-width:640px)').matches;
+
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x050914, 0.0009);
+  const camera = new THREE.PerspectiveCamera(70, innerWidth/innerHeight, 0.1, 2000);
+  const renderer = new THREE.WebGLRenderer({antialias:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setClearColor(0x050914, 1);
+  introEl.appendChild(renderer.domElement);
+
+  // Sao
+  const starCount = isMobile ? 2200 : 5000;
+  const geo = new THREE.BufferGeometry();
+  const pos = new Float32Array(starCount*3);
+  const col = new Float32Array(starCount*3);
+  for(let i=0;i<starCount;i++){
+    const r = 300 + Math.random()*600;
+    const t = Math.random()*Math.PI*2, p = Math.acos(2*Math.random()-1);
+    pos[i*3]=r*Math.sin(p)*Math.cos(t);
+    pos[i*3+1]=r*Math.sin(p)*Math.sin(t);
+    pos[i*3+2]=r*Math.cos(p);
+    const c = 0.6+Math.random()*0.4;
+    col[i*3]=c*0.8; col[i*3+1]=c*0.9; col[i*3+2]=1;
+  }
+  geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  geo.setAttribute('color', new THREE.BufferAttribute(col,3));
+  const stars = new THREE.Points(geo, new THREE.PointsMaterial({
+    size:2.2, vertexColors:true, transparent:true, opacity:.9,
+    sizeAttenuation:true, blending:THREE.AdditiveBlending
+  }));
+  scene.add(stars);
+
+  // HỆ MẶT TRỜI (đặt phía xa để làm khung cảnh)
+  const solar = new THREE.Group();
+  solar.position.set(-120, 60, -520);
+  scene.add(solar);
+
+  // Mặt trời phát sáng
+  const sun = new THREE.Mesh(
+    new THREE.SphereGeometry(48,32,32),
+    new THREE.MeshBasicMaterial({color:0xffd27a})
+  );
+  solar.add(sun);
+  // hào quang mặt trời
+  const sunGlow = new THREE.Mesh(
+    new THREE.SphereGeometry(72,32,32),
+    new THREE.MeshBasicMaterial({color:0xffb347, transparent:true, opacity:.25, blending:THREE.AdditiveBlending})
+  );
+  const sunGlow2 = new THREE.Mesh(
+    new THREE.SphereGeometry(110,32,32),
+    new THREE.MeshBasicMaterial({color:0xff8c3b, transparent:true, opacity:.12, blending:THREE.AdditiveBlending})
+  );
+  solar.add(sunGlow, sunGlow2);
+
+  // Các hành tinh: [bán kính quỹ đạo, kích thước, màu, tốc độ, độ nghiêng quỹ đạo, màu vành]
+  const planetDefs = [
+    [95,  6,  0x9fa6b2, 0.9,  0.15, null],       // Sao Thủy
+    [135, 10, 0xe8b06a, 0.65, 0.05, null],       // Sao Kim
+    [180, 11, 0x5b8def, 0.5,  0.0,  null],       // Trái Đất
+    [225, 8,  0xd66a4a, 0.42, 0.1,  null],       // Sao Hỏa
+    [300, 22, 0xc97b4a, 0.28, 0.08, null],       // Sao Mộc
+    [370, 18, 0xf0d59a, 0.2,  0.2,  0xf5e6b8],   // Sao Thổ (có vành)
+  ];
+  const planets = [];
+  planetDefs.forEach(([orbit,size,color,speed,tilt,ringColor])=>{
+    // vòng quỹ đạo mờ
+    const ringGeo = new THREE.RingGeometry(orbit-0.4, orbit+0.4, 96);
+    const ring = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({
+      color:0x6a7fb0, transparent:true, opacity:.18, side:THREE.DoubleSide
+    }));
+    ring.rotation.x = Math.PI/2 + tilt;
+    solar.add(ring);
+
+    const pivot = new THREE.Group();
+    pivot.rotation.x = tilt;
+    const planet = new THREE.Mesh(
+      new THREE.SphereGeometry(size,24,24),
+      new THREE.MeshBasicMaterial({color})
+    );
+    planet.position.x = orbit;
+    // vành đai (Sao Thổ)
+    if(ringColor){
+      const pRing = new THREE.Mesh(
+        new THREE.RingGeometry(size*1.4, size*2.3, 48),
+        new THREE.MeshBasicMaterial({color:ringColor, transparent:true, opacity:.55, side:THREE.DoubleSide})
+      );
+      pRing.rotation.x = Math.PI/2.6;
+      planet.add(pRing);
+    }
+    pivot.add(planet);
+    solar.add(pivot);
+    planets.push({pivot, speed, phase:Math.random()*Math.PI*2});
+  });
+
+  // NGÔI SAO ĐẶC BIỆT = nút vào trang (đặt lệch hướng để phải xoay tìm)
+  const enterGroup = new THREE.Group();
+  const core = new THREE.Mesh(
+    new THREE.SphereGeometry(14,32,32),
+    new THREE.MeshBasicMaterial({color:0xfff0f6})
+  );
+  const halo = new THREE.Mesh(
+    new THREE.SphereGeometry(30,32,32),
+    new THREE.MeshBasicMaterial({color:0xff9ec4, transparent:true, opacity:.35, blending:THREE.AdditiveBlending})
+  );
+  const halo2 = new THREE.Mesh(
+    new THREE.SphereGeometry(50,32,32),
+    new THREE.MeshBasicMaterial({color:0xff5c8a, transparent:true, opacity:.14, blending:THREE.AdditiveBlending})
+  );
+  enterGroup.add(core,halo,halo2);
+  // vị trí lệch phía sau-phải-dưới
+  enterGroup.position.set(180, -60, 260);
+  scene.add(enterGroup);
+
+  // HTML label cho ngôi sao đặc biệt
+  const label = document.createElement('div');
+  label.textContent = '💖 Anh yêu em';
+  Object.assign(label.style,{
+    position:'absolute', color:'#fff', fontFamily:'Quicksand,sans-serif',
+    fontWeight:'700', fontSize:'15px', padding:'8px 16px', borderRadius:'30px',
+    background:'rgba(255,92,138,.55)', border:'1px solid rgba(255,255,255,.6)',
+    backdropFilter:'blur(4px)', transform:'translate(-50%,-140%)', whiteSpace:'nowrap',
+    pointerEvents:'none', textShadow:'0 0 10px rgba(255,120,160,.8)', display:'none',
+    boxShadow:'0 0 30px rgba(255,92,138,.6)', zIndex:5
+  });
+  introEl.appendChild(label);
+
+  // Điều khiển xoay (drag + touch)
+  let rotY=0, rotX=0, targetY=0, targetX=0, dragging=false, lastX,lastY, moved=0;
+  function down(x,y){dragging=true;lastX=x;lastY=y;moved=0;introEl.classList.add('grabbing');}
+  function move(x,y){
+    if(!dragging)return;
+    const dx=x-lastX, dy=y-lastY; lastX=x;lastY=y; moved+=Math.abs(dx)+Math.abs(dy);
+    targetY += dx*0.005; targetX += dy*0.005;
+    targetX=Math.max(-1.1,Math.min(1.1,targetX));
+  }
+  function up(){dragging=false;introEl.classList.remove('grabbing');}
+  introEl.addEventListener('mousedown',e=>down(e.clientX,e.clientY));
+  addEventListener('mousemove',e=>move(e.clientX,e.clientY));
+  addEventListener('mouseup',up);
+  introEl.addEventListener('touchstart',e=>down(e.touches[0].clientX,e.touches[0].clientY),{passive:true});
+  introEl.addEventListener('touchmove',e=>move(e.touches[0].clientX,e.touches[0].clientY),{passive:true});
+  introEl.addEventListener('touchend',up);
+
+  // Bấm để vào
+  const raycaster = new THREE.Raycaster();
+  function tryEnter(x,y){
+    if(moved>12) return; // đang kéo thì bỏ qua
+    const mouse = new THREE.Vector2((x/innerWidth)*2-1, -(y/innerHeight)*2+1);
+    raycaster.setFromCamera(mouse,camera);
+    const hits = raycaster.intersectObjects([core,halo,halo2],true);
+    if(hits.length) enterMain();
+  }
+  introEl.addEventListener('click',e=>tryEnter(e.clientX,e.clientY));
+  introEl.addEventListener('touchend',e=>{
+    if(e.changedTouches.length) tryEnter(e.changedTouches[0].clientX,e.changedTouches[0].clientY);
+  });
+
+  let entered=false;
+  function enterMain(){
+    if(entered)return; entered=true;
+    document.getElementById('warp').style.opacity='1';
+    flash.style.opacity='1';
+    setTimeout(()=>{
+      introEl.style.opacity='0';
+      window.scrollTo(0,0);                       // luôn hiện đầu trang
+      document.getElementById('main').classList.add('show');
+      setTimeout(()=>{introEl.style.display='none';document.getElementById('warp').style.opacity='0';},1200);
+      startPartyFx();
+      if(window.startAlbum) window.startAlbum();   // tự phát nhạc
+    },500);
+  }
+
+  // Quay lại intro từ trang chính
+  window.returnToIntro = function(){
+    const warp = document.getElementById('warp');
+    warp.style.opacity='1';
+    setTimeout(()=>{
+      introEl.style.display='block';
+      introEl.style.opacity='0';
+      // reset trạng thái để có thể vào lại
+      entered=false;
+      flash.style.opacity='0';
+      // đưa góc nhìn về hướng chưa thấy ngôi sao (phải xoay tìm lại)
+      targetY = 0; targetX = 0;
+      requestAnimationFrame(()=>{ introEl.style.opacity='1'; });
+      window.scrollTo(0,0);
+      document.getElementById('main').classList.remove('show');
+      setTimeout(()=>{ warp.style.opacity='0'; }, 800);
+    }, 400);
+  };
+
+  // Render loop
+  const clock = new THREE.Clock();
+  function animate(){
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+    if(!dragging){ targetY += 0.0004; } // tự trôi nhẹ
+    rotY += (targetY-rotY)*0.06;
+    rotX += (targetX-rotX)*0.06;
+    camera.position.x = Math.sin(rotY)*10;
+    camera.rotation.y = rotY;
+    camera.rotation.x = rotX;
+    stars.rotation.y = t*0.01;
+    // Hệ mặt trời: mặt trời tự quay + hành tinh quay quanh
+    sun.rotation.y = t*0.15;
+    solar.rotation.y = t*0.02;
+    planets.forEach(p=>{ p.pivot.rotation.y = p.phase + t*p.speed*0.35; });
+
+    const pulse = 1+Math.sin(t*2)*0.08;
+    enterGroup.scale.set(pulse,pulse,pulse);
+
+    // Cập nhật label khi ngôi sao trong tầm nhìn
+    const v = enterGroup.position.clone().project(camera);
+    const visible = v.z<1 && v.x>-1 && v.x<1 && v.y>-1 && v.y<1;
+    if(visible){
+      label.style.display='block';
+      label.style.left = ((v.x*0.5+0.5)*innerWidth)+'px';
+      label.style.top  = ((-v.y*0.5+0.5)*innerHeight)+'px';
+    } else label.style.display='none';
+
+    renderer.render(scene,camera);
+  }
+  animate();
+  addEventListener('resize',()=>{
+    camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth,innerHeight);
+  });
+})();
+
+/* ---------- HIỆU ỨNG SINH NHẬT TRANG CHÍNH ---------- */
+function startPartyFx(){
+  // Confetti
+  const dur = 2500, end = Date.now()+dur;
+  (function frame(){
+    confetti({particleCount:5,angle:60,spread:60,origin:{x:0},colors:['#ff7aa2','#ffc2d6','#e85d84','#fff']});
+    confetti({particleCount:5,angle:120,spread:60,origin:{x:1},colors:['#ff7aa2','#ffc2d6','#e85d84','#fff']});
+    if(Date.now()<end) requestAnimationFrame(frame);
+  })();
+  confetti({particleCount:120,spread:90,origin:{y:.6},colors:['#ff7aa2','#ffc2d6','#e85d84','#fff']});
+
+  // Tim / cánh hoa rơi liên tục
+  const layer = document.getElementById('fx-layer');
+  const emojis = ['❤','🌸','💕','✨','🎈'];
+  setInterval(()=>{
+    const el = document.createElement('div');
+    el.className='fall';
+    el.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    el.style.left = Math.random()*100+'vw';
+    el.style.fontSize = (14+Math.random()*22)+'px';
+    const d = 6+Math.random()*6;
+    el.style.animationDuration = d+'s';
+    layer.appendChild(el);
+    setTimeout(()=>el.remove(), d*1000);
+  }, 500);
+
+  // Reveal timeline khi cuộn
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
+  },{threshold:.2});
+  document.querySelectorAll('.tl-item.reveal').forEach(el=>io.observe(el));
+}
+
+/* ---------- QUẢ CẦU ẢNH 3D ---------- */
+(function(){
+  const stage=document.getElementById('sphere-stage');
+  if(!stage||typeof THREE==='undefined') return;
+
+  // DỮ LIỆU KỶ NIỆM — thay img bằng đường dẫn ảnh thật của em (để trống sẽ dùng ảnh mẫu)
+  const memories=[
+    {img:'', date:'01.01', title:'Kỷ niệm 1', text:'Viết câu chuyện đáng nhớ của hai đứa vào đây.'},
+    {img:'', date:'14.02', title:'Kỷ niệm 2', text:'Một khoảnh khắc ngọt ngào cần được ghi lại.'},
+    {img:'', date:'20.03', title:'Kỷ niệm 3', text:'Nơi chúng mình đã cùng nhau đi qua.'},
+    {img:'', date:'08.04', title:'Kỷ niệm 4', text:'Nụ cười của em trong ngày hôm ấy.'},
+    {img:'', date:'12.05', title:'Kỷ niệm 5', text:'Chuyến đi đầu tiên của hai đứa.'},
+    {img:'', date:'19.06', title:'Kỷ niệm 6', text:'Một ngày bình thường mà thật đặc biệt.'},
+    {img:'', date:'23.07', title:'Kỷ niệm 7', text:'Khoảnh khắc mình muốn giữ mãi.'},
+    {img:'', date:'15.08', title:'Kỷ niệm 8', text:'Cùng nhau qua bao buồn vui.'},
+    {img:'', date:'30.09', title:'Kỷ niệm 9', text:'Ánh mắt ấy anh không thể quên.'},
+    {img:'', date:'10.10', title:'Kỷ niệm 10', text:'Ngày mình nhận ra điều quan trọng nhất.'},
+    {img:'', date:'11.11', title:'Kỷ niệm 11', text:'Một lời hứa nhỏ giữa hai đứa.'},
+    {img:'', date:'25.12', title:'Kỷ niệm 12', text:'Và còn nhiều điều đang chờ phía trước ❤'},
+  ];
+
+  const W=()=>stage.clientWidth, H=()=>stage.clientHeight;
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(55, W()/H(), 0.1, 1000);
+  camera.position.z=340;
+  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setSize(W(),H());
+  stage.insertBefore(renderer.domElement, stage.firstChild);
+
+  const group=new THREE.Group();
+  scene.add(group);
+
+  // Tạo texture ảnh mẫu (gradient hồng + số + ngày)
+  function placeholderTexture(m,i){
+    const c=document.createElement('canvas'); c.width=c.height=256;
+    const x=c.getContext('2d');
+    const g=x.createLinearGradient(0,0,256,256);
+    const pal=[['#ff9ec4','#ffd6e4'],['#ff7aa2','#ffc2d6'],['#ff5c8a','#ff9ec4']][i%3];
+    g.addColorStop(0,pal[0]); g.addColorStop(1,pal[1]);
+    x.fillStyle=g; x.fillRect(0,0,256,256);
+    x.fillStyle='rgba(255,255,255,.95)';
+    x.font='bold 40px Quicksand,sans-serif'; x.textAlign='center';
+    x.fillText('❤',128,110);
+    x.font='600 26px Quicksand,sans-serif';
+    x.fillText('Ảnh '+(i+1),128,150);
+    x.font='500 22px Quicksand,sans-serif';
+    x.fillText(m.date,128,185);
+    return new THREE.CanvasTexture(c);
+  }
+  function makeTexture(m,i){
+    if(m.img){
+      const t=new THREE.TextureLoader().load(m.img);
+      return t;
+    }
+    return placeholderTexture(m,i);
+  }
+
+  const tiles=[];
+  const N=memories.length;
+  const R=170;
+  for(let i=0;i<N;i++){
+    // phân bố đều trên mặt cầu (fibonacci)
+    const y=1-(i/(N-1))*2;
+    const rad=Math.sqrt(1-y*y);
+    const theta=Math.PI*(3-Math.sqrt(5))*i;
+    const x=Math.cos(theta)*rad, z=Math.sin(theta)*rad;
+    const tex=makeTexture(memories[i],i);
+    const mat=new THREE.MeshBasicMaterial({map:tex,side:THREE.DoubleSide,transparent:true});
+    const size=58;
+    const tile=new THREE.Mesh(new THREE.PlaneGeometry(size,size),mat);
+    tile.position.set(x*R,y*R,z*R);
+    tile.lookAt(0,0,0);
+    tile.scale.x=-1; // vì lookAt làm ảnh bị lật
+    tile.userData=memories[i];
+    // viền trắng
+    const border=new THREE.Mesh(new THREE.PlaneGeometry(size+8,size+8),
+      new THREE.MeshBasicMaterial({color:0xffffff,side:THREE.DoubleSide,transparent:true,opacity:.9}));
+    border.position.copy(tile.position);
+    border.lookAt(0,0,0); border.position.multiplyScalar(0.985);
+    group.add(border);
+    group.add(tile);
+    tiles.push(tile);
+  }
+
+  // Điều khiển xoay
+  let rotX=0,rotY=0,tX=0,tY=0,drag=false,lx,ly,moved=0;
+  function down(x,y){drag=true;lx=x;ly=y;moved=0;stage.classList.add('grabbing');}
+  function move(x,y){
+    if(!drag)return;
+    const dx=x-lx,dy=y-ly;lx=x;ly=y;moved+=Math.abs(dx)+Math.abs(dy);
+    tY+=dx*0.006; tX+=dy*0.006;
+    tX=Math.max(-1.2,Math.min(1.2,tX));
+  }
+  function up(){drag=false;stage.classList.remove('grabbing');}
+  renderer.domElement.addEventListener('mousedown',e=>down(e.clientX,e.clientY));
+  addEventListener('mousemove',e=>move(e.clientX,e.clientY));
+  addEventListener('mouseup',up);
+  renderer.domElement.addEventListener('touchstart',e=>down(e.touches[0].clientX,e.touches[0].clientY),{passive:true});
+  renderer.domElement.addEventListener('touchmove',e=>{move(e.touches[0].clientX,e.touches[0].clientY);},{passive:true});
+  renderer.domElement.addEventListener('touchend',up);
+
+  // Click mở modal
+  const ray=new THREE.Raycaster();
+  const modal=document.getElementById('photo-modal');
+  function openInfo(x,y){
+    if(moved>10)return;
+    const r=renderer.domElement.getBoundingClientRect();
+    const mouse=new THREE.Vector2(((x-r.left)/r.width)*2-1, -((y-r.top)/r.height)*2+1);
+    ray.setFromCamera(mouse,camera);
+    const hits=ray.intersectObjects(tiles);
+    if(hits.length){
+      const d=hits[0].object.userData;
+      const mp=document.getElementById('modalPhoto');
+      mp.innerHTML = d.img ? '<img src="'+d.img+'" alt="">' : ('📷 '+d.title);
+      document.getElementById('modalDate').textContent=d.date;
+      document.getElementById('modalTitle').textContent=d.title;
+      document.getElementById('modalText').textContent=d.text;
+      modal.classList.add('show');
+    }
+  }
+  renderer.domElement.addEventListener('click',e=>openInfo(e.clientX,e.clientY));
+  renderer.domElement.addEventListener('touchend',e=>{
+    if(e.changedTouches.length) openInfo(e.changedTouches[0].clientX,e.changedTouches[0].clientY);
+  });
+  document.getElementById('modalClose').addEventListener('click',()=>modal.classList.remove('show'));
+  modal.addEventListener('click',e=>{ if(e.target===modal) modal.classList.remove('show'); });
+
+  function animate(){
+    requestAnimationFrame(animate);
+    if(!drag) tY+=0.0016; // tự xoay nhẹ
+    rotY+=(tY-rotY)*0.08; rotX+=(tX-rotX)*0.08;
+    group.rotation.y=rotY; group.rotation.x=rotX;
+    renderer.render(scene,camera);
+  }
+  animate();
+  addEventListener('resize',()=>{
+    camera.aspect=W()/H(); camera.updateProjectionMatrix();
+    renderer.setSize(W(),H());
+  });
+})();
+
+/* ---------- TRÌNH PHÁT NHẠC (mp3 nội bộ) ---------- */
+(function(){
+  const audio=document.getElementById('audio');
+  const playBtn=document.getElementById('playBtn');
+  const prevBtn=document.getElementById('prevBtn');
+  const nextBtn=document.getElementById('nextBtn');
+  const vinyl=document.getElementById('vinyl');
+  const bar=document.getElementById('bar');
+  const progress=document.getElementById('progress');
+  const trackName=document.getElementById('trackName');
+  const trackSub=document.getElementById('trackSub');
+  const list=[...document.querySelectorAll('#playlist button')];
+  let current=0;
+
+  function setInfo(i){
+    current=i;
+    list.forEach((b,idx)=>b.classList.toggle('active',idx===i));
+    trackName.textContent=list[i].dataset.name;
+    trackSub.textContent=list[i].dataset.artist;
+  }
+  function play(i){
+    setInfo(i);
+    audio.src=list[i].dataset.src;
+    audio.play().catch(()=>{
+      trackSub.textContent='Chạm nút ▶ để phát nhạc nhé';
+    });
+  }
+  function next(){ play((current+1)%list.length); }
+  function prev(){ play((current-1+list.length)%list.length); }
+
+  list.forEach((btn,i)=>btn.addEventListener('click',()=>play(i)));
+  nextBtn.addEventListener('click',next);
+  prevBtn.addEventListener('click',prev);
+  playBtn.addEventListener('click',()=>{
+    if(!audio.src){ play(0); return; }
+    if(audio.paused) audio.play(); else audio.pause();
+  });
+
+  audio.addEventListener('play',()=>{playBtn.textContent='❚❚';vinyl.classList.add('playing');});
+  audio.addEventListener('pause',()=>{playBtn.textContent='▶';vinyl.classList.remove('playing');});
+  audio.addEventListener('ended',next); // hết bài tự chuyển
+  audio.addEventListener('timeupdate',()=>{
+    if(audio.duration) bar.style.width=(audio.currentTime/audio.duration*100)+'%';
+  });
+  progress.addEventListener('click',e=>{
+    if(!audio.duration)return;
+    const r=progress.getBoundingClientRect();
+    audio.currentTime=((e.clientX-r.left)/r.width)*audio.duration;
+  });
+
+  // Gọi từ enterMain: tự phát bài đầu tiên khi vào trang
+  window.startAlbum=function(){ play(0); };
+  window.pauseAlbum=function(){ if(!audio.paused) audio.pause(); };
+})();
+
+/* ---------- NÚT QUAY LẠI INTRO ---------- */
+document.getElementById('backIntro').addEventListener('click',()=>{
+  if(window.pauseAlbum) window.pauseAlbum();
+  if(window.returnToIntro) window.returnToIntro();
+});
+</script>
+</body>
+</html>
