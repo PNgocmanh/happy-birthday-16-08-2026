@@ -104,6 +104,41 @@
   /* Phần 2 - Timeline album */
   .sec-head{text-align:center;margin-bottom:clamp(40px,7vw,64px);}
   .sec-head .eyebrow{display:block;}
+  .eyebrow-lg{font-size:clamp(30px,7vw,50px);}
+
+  /* Tấm thiệp mở album */
+  .card-gate{position:relative;}
+  .card-content{transition:opacity .8s ease .35s, transform .8s ease .35s;}
+  .card-cover{position:absolute;inset:0;z-index:30;perspective:1800px;
+    border-radius:28px;overflow:hidden;box-shadow:0 24px 60px rgba(232,93,132,.28);}
+  .card-panel{position:absolute;top:0;bottom:0;width:50%;
+    background:linear-gradient(135deg,var(--rose),var(--pink-3));
+    transition:transform 1s cubic-bezier(.65,.05,.3,1);
+    will-change:transform;}
+  .card-panel::before{content:"";position:absolute;inset:0;
+    background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.18), transparent 60%);}
+  .card-panel-left{left:0;transform-origin:right center;border-radius:28px 0 0 28px;}
+  .card-panel-right{right:0;transform-origin:left center;border-radius:0 28px 28px 0;}
+  .card-face{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;color:#fff;gap:12px;
+    padding:20px;transition:opacity .35s ease;}
+  .card-face-icon{font-size:clamp(40px,9vw,60px);animation:beat 1.8s ease-in-out infinite;}
+  .card-face-title{font-family:'Playfair Display',serif;font-style:italic;
+    font-size:clamp(22px,5.5vw,32px);text-shadow:0 4px 18px rgba(122,59,82,.3);}
+  .card-face-sub{max-width:420px;font-size:clamp(13px,3.4vw,15px);opacity:.92;line-height:1.6;}
+  .card-open-btn{margin-top:10px;padding:14px 34px;border:none;border-radius:30px;cursor:pointer;
+    background:#fff;color:var(--rose-deep);font-family:'Quicksand',sans-serif;
+    font-weight:700;font-size:15px;box-shadow:0 12px 30px rgba(122,59,82,.25);
+    transition:transform .15s, box-shadow .2s;}
+  .card-open-btn:hover{transform:translateY(-2px);}
+  .card-open-btn:active{transform:scale(.96);}
+
+  .card-gate.opened .card-content{opacity:1;transform:none;}
+  .card-gate:not(.opened) .card-content{opacity:0;transform:scale(.97);}
+  .card-gate.opened .card-cover{pointer-events:none;}
+  .card-gate.opened .card-face{opacity:0;pointer-events:none;}
+  .card-gate.opened .card-panel-left{transform:rotateY(-112deg);}
+  .card-gate.opened .card-panel-right{transform:rotateY(112deg);}
   .sec-head h2{font-family:'Playfair Display',serif;font-size:clamp(28px,6.5vw,46px);
     color:var(--plum);margin-top:4px;}
   .timeline{position:relative;padding:10px 0;}
@@ -264,6 +299,8 @@
   <!-- PHẦN 2: TIMELINE ALBUM -->
   <section>
     <div class="wrap">
+      <div class="card-gate" id="albumGate">
+      <div class="card-content" id="albumContent">
       <div class="sec-head">
         <span class="eyebrow">Album kỷ niệm</span>
         <h2>Hành trình của chúng ta</h2>
@@ -326,13 +363,25 @@
           </div>
         </div>
       </div>
+      </div><!-- /card-content -->
+
+      <div class="card-cover" id="albumCover">
+        <div class="card-panel card-panel-left"></div>
+        <div class="card-panel card-panel-right"></div>
+        <div class="card-face" id="cardFace">
+          <div class="card-face-icon">💌</div>
+          <div class="card-face-title">Một tấm thiệp nhỏ dành cho em</div>
+          <div class="card-face-sub">Chạm để mở thiệp và xem lại những kỷ niệm của chúng mình</div>
+          <button class="card-open-btn" id="cardOpenBtn" type="button">Mở thiệp 💕</button>
+        </div>
+      </div>
+      </div><!-- /card-gate -->
     </div>
   </section>
   <section>
     <div class="wrap">
       <div class="sec-head">
-        <span class="eyebrow">Giai điệu dành cho em</span>
-        <h2>Bài hát của chúng mình</h2>
+        <span class="eyebrow eyebrow-lg">Giai điệu dành cho em</span>
       </div>
       <div class="music">
         <div class="vinyl" id="vinyl"></div>
@@ -350,7 +399,6 @@
           <button data-src="music/3-day-la-bai-hat-sinh-nhat.mp3" data-name="Đây là bài hát sinh nhật" data-artist="Bùi Công Nam x Cải Lộ Nướng x Fillinus">🎵 ĐÂY LÀ BÀI HÁT SINH NHẬT</button>
           <button data-src="music/4-i-love-you.mp3" data-name="I Love You (Special Version)" data-artist="Bùi Công Nam x Binz">🎵 'I LOVE YOU' (Always, In Every Way)</button>
         </div>
-        <div class="music-hint">Giữ thư mục <code>music</code> cùng chỗ với file HTML để nghe được nhạc.</div>
       </div>
       <audio id="audio"></audio>
     </div>
@@ -852,6 +900,19 @@ function startPartyFx(){
   // Gọi từ enterMain: tự phát bài đầu tiên khi vào trang
   window.startAlbum=function(){ play(0); };
   window.pauseAlbum=function(){ if(!audio.paused) audio.pause(); };
+})();
+
+/* ---------- TẤM THIỆP MỞ ALBUM ---------- */
+(function(){
+  const gate=document.getElementById('albumGate');
+  const btn=document.getElementById('cardOpenBtn');
+  const cover=document.getElementById('albumCover');
+  if(!gate||!btn||!cover) return;
+  btn.addEventListener('click',()=>{
+    if(gate.classList.contains('opened')) return;
+    gate.classList.add('opened');
+    setTimeout(()=>{ cover.style.display='none'; },1050);
+  });
 })();
 
 /* ---------- NÚT QUAY LẠI INTRO ---------- */
