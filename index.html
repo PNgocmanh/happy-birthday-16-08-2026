@@ -649,7 +649,7 @@ function startPartyFx(){
     {img:'images/km-09.jpg', date:'31.01.2026', title:'Hihi <3', text:'Hihi <3'},
     {img:'images/km-10.jpg', date:'04.07.2026', title:'Sến súa một tí', text:'Một tí sến súa của anh. Mong em sẽ đọc nhé haha.'},
     {img:'images/km-11.jpg', date:'24.12.2025', title:'Mê em lắm rùi', text:'Khúc này là mê em lắm rùi ó 💕'},
-    {img:'images/km-12.jpg', date:'25.04.2026', title:'Chụp hình cùng nhau', text:'Hãy chụp hình cùng nhau em nhé 📸'},
+    {img:'images/km-12.jpg', date:'25.04.2026', title:'Chụp hình cùng nhau', text:'Tụi mình chụp hình với nhau nhiều hơn em nhé 📸'},
   ];
 
   const W=()=>stage.clientWidth, H=()=>stage.clientHeight;
@@ -721,8 +721,10 @@ function startPartyFx(){
     if(m.img){
       const img=new Image();
       img.crossOrigin='anonymous';
+      img.decoding='async';
       img.onload=()=>{ drawCardTexture(canvas,m,i,img); tex.needsUpdate=true; };
       img.src=m.img;
+      m.imgEl=img; // giữ ảnh đã tải sẵn để hiện ngay trong modal, khỏi tải lại
     }
     return tex;
   }
@@ -776,7 +778,12 @@ function startPartyFx(){
     if(hits.length){
       const d=hits[0].object.userData;
       const mp=document.getElementById('modalPhoto');
-      mp.innerHTML = d.img ? '<img src="'+d.img+'" alt="">' : ('📷 '+d.title);
+      mp.innerHTML='';
+      if(d.imgEl){
+        mp.appendChild(d.imgEl); // dùng lại ảnh đã tải/giải mã sẵn -> hiện tức thì
+      }else{
+        mp.textContent='📷 '+d.title;
+      }
       document.getElementById('modalDate').textContent=d.date;
       document.getElementById('modalText').textContent=d.text;
       modal.classList.add('show');
