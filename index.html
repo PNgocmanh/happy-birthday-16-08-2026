@@ -108,8 +108,11 @@
 
   /* Tấm thiệp mở album */
   .card-gate{position:relative;}
+  .card-peek{overflow:hidden;transition:max-height .9s cubic-bezier(.65,.05,.3,1);}
   .card-content{transition:opacity .8s ease .35s, transform .8s ease .35s;}
-  .card-cover{position:absolute;inset:0;z-index:30;perspective:1800px;
+  .card-cover{position:absolute;top:0;left:50%;transform:translateX(-50%);
+    width:min(360px,86vw);height:clamp(420px,62vh,540px);
+    z-index:30;perspective:1800px;
     border-radius:28px;overflow:hidden;box-shadow:0 24px 60px rgba(232,93,132,.28);}
   .card-panel{position:absolute;top:0;bottom:0;width:50%;
     background:linear-gradient(135deg,var(--rose),var(--pink-3));
@@ -133,6 +136,7 @@
   .card-open-btn:hover{transform:translateY(-2px);}
   .card-open-btn:active{transform:scale(.96);}
 
+  .card-gate:not(.opened) .card-peek{max-height:clamp(420px,62vh,540px);}
   .card-gate.opened .card-content{opacity:1;transform:none;}
   .card-gate:not(.opened) .card-content{opacity:0;transform:scale(.97);}
   .card-gate.opened .card-cover{pointer-events:none;}
@@ -141,31 +145,6 @@
   .card-gate.opened .card-panel-right{transform:rotateY(112deg);}
   .sec-head h2{font-family:'Playfair Display',serif;font-size:clamp(28px,6.5vw,46px);
     color:var(--plum);margin-top:4px;}
-  .timeline{position:relative;padding:10px 0;}
-  .timeline::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:3px;
-    transform:translateX(-50%);
-    background:linear-gradient(var(--rose),var(--pink-3));border-radius:3px;}
-  .tl-item{position:relative;width:50%;padding:14px 40px;box-sizing:border-box;}
-  .tl-item:nth-child(odd){left:0;text-align:right;}
-  .tl-item:nth-child(even){left:50%;text-align:left;}
-  .tl-dot{position:absolute;top:26px;width:18px;height:18px;border-radius:50%;
-    background:var(--rose-deep);border:4px solid #fff;box-shadow:0 0 0 4px var(--pink-3);z-index:2;}
-  .tl-item:nth-child(odd) .tl-dot{right:-9px;}
-  .tl-item:nth-child(even) .tl-dot{left:-9px;}
-  .tl-card{background:#fff;border-radius:20px;padding:14px;
-    box-shadow:0 12px 34px rgba(232,93,132,.18);display:inline-block;
-    max-width:340px;text-align:left;}
-  .tl-photo{width:100%;aspect-ratio:4/3;border-radius:14px;overflow:hidden;
-    background:linear-gradient(135deg,var(--pink-3),#ffdbe7);
-    display:flex;align-items:center;justify-content:center;color:#fff;
-    font-weight:600;font-size:13px;text-align:center;padding:10px;margin-bottom:12px;}
-  .tl-photo img{width:100%;height:100%;object-fit:cover;}
-  .tl-date{font-family:'Dancing Script',cursive;color:var(--rose-deep);
-    font-size:22px;line-height:1;}
-  .tl-card h3{font-size:16px;margin:4px 0 6px;color:var(--plum);}
-  .tl-card p{font-size:14px;line-height:1.6;color:#8a5266;}
-  .tl-item.reveal{opacity:0;transform:translateY(30px);transition:.7s ease;}
-  .tl-item.reveal.in{opacity:1;transform:none;}
 
   /* Quả cầu ảnh 3D */
   .sphere-block{margin-top:clamp(40px,7vw,70px);}
@@ -257,13 +236,6 @@
     to{transform:translateY(105vh) rotate(360deg);opacity:0;}
   }
 
-  /* Mobile timeline -> 1 cột */
-  @media(max-width:640px){
-    .timeline::before{left:20px;}
-    .tl-item{width:100%;left:0!important;text-align:left!important;padding:14px 14px 14px 46px;}
-    .tl-item .tl-dot{left:12px!important;right:auto!important;}
-    .tl-card{max-width:100%;}
-  }
   @media(prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important;}
   }
@@ -300,49 +272,8 @@
   <section>
     <div class="wrap">
       <div class="card-gate" id="albumGate">
+      <div class="card-peek" id="cardPeek">
       <div class="card-content" id="albumContent">
-      <div class="sec-head">
-        <span class="eyebrow">Album kỷ niệm</span>
-        <h2>Hành trình của chúng ta</h2>
-      </div>
-      <div class="timeline" id="timeline">
-        <div class="tl-item reveal">
-          <span class="tl-dot"></span>
-          <div class="tl-card">
-            <div class="tl-photo"><!-- <img src="km1.jpg"> -->Ảnh kỷ niệm 1</div>
-            <div class="tl-date">Ngày đầu gặp nhau</div>
-            <h3>Lần đầu mình quen nhau</h3>
-            <p>Nơi bắt đầu của mọi thứ. Thay ngày tháng và câu chuyện của hai đứa vào đây.</p>
-          </div>
-        </div>
-        <div class="tl-item reveal">
-          <span class="tl-dot"></span>
-          <div class="tl-card">
-            <div class="tl-photo"><!-- <img src="km2.jpg"> -->Ảnh kỷ niệm 2</div>
-            <div class="tl-date">Chuyến đi đầu tiên</div>
-            <h3>Cùng nhau đi chơi xa</h3>
-            <p>Một kỷ niệm khó quên. Kể lại khoảnh khắc đáng nhớ ở đây.</p>
-          </div>
-        </div>
-        <div class="tl-item reveal">
-          <span class="tl-dot"></span>
-          <div class="tl-card">
-            <div class="tl-photo"><!-- <img src="km3.jpg"> -->Ảnh kỷ niệm 3</div>
-            <div class="tl-date">Dịp đặc biệt</div>
-            <h3>Ngày kỷ niệm yêu nhau</h3>
-            <p>Ghi lại cột mốc ý nghĩa của hai người tại đây.</p>
-          </div>
-        </div>
-        <div class="tl-item reveal">
-          <span class="tl-dot"></span>
-          <div class="tl-card">
-            <div class="tl-photo"><!-- <img src="km4.jpg"> -->Ảnh kỷ niệm 4</div>
-            <div class="tl-date">Hôm nay</div>
-            <h3>Sinh nhật của em</h3>
-            <p>Và còn thật nhiều kỷ niệm nữa đang chờ phía trước ❤</p>
-          </div>
-        </div>
-      </div>
 
       <!-- QUẢ CẦU ẢNH 3D -->
       <div class="sphere-block">
@@ -357,13 +288,13 @@
               <button class="modal-close" id="modalClose">✕</button>
               <div class="modal-photo" id="modalPhoto"></div>
               <div class="modal-date" id="modalDate"></div>
-              <h3 id="modalTitle"></h3>
               <p id="modalText"></p>
             </div>
           </div>
         </div>
       </div>
       </div><!-- /card-content -->
+      </div><!-- /card-peek -->
 
       <div class="card-cover" id="albumCover">
         <div class="card-panel card-panel-left"></div>
@@ -698,11 +629,6 @@ function startPartyFx(){
     setTimeout(()=>el.remove(), d*1000);
   }, 500);
 
-  // Reveal timeline khi cuộn
-  const io = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
-  },{threshold:.2});
-  document.querySelectorAll('.tl-item.reveal').forEach(el=>io.observe(el));
 }
 
 /* ---------- QUẢ CẦU ẢNH 3D ---------- */
@@ -712,18 +638,18 @@ function startPartyFx(){
 
   // DỮ LIỆU KỶ NIỆM — thay img bằng đường dẫn ảnh thật của em (để trống sẽ dùng ảnh mẫu)
   const memories=[
-    {img:'', date:'01.01', title:'Kỷ niệm 1', text:'Viết câu chuyện đáng nhớ của hai đứa vào đây.'},
-    {img:'', date:'14.02', title:'Kỷ niệm 2', text:'Một khoảnh khắc ngọt ngào cần được ghi lại.'},
-    {img:'', date:'20.03', title:'Kỷ niệm 3', text:'Nơi chúng mình đã cùng nhau đi qua.'},
-    {img:'', date:'08.04', title:'Kỷ niệm 4', text:'Nụ cười của em trong ngày hôm ấy.'},
-    {img:'', date:'12.05', title:'Kỷ niệm 5', text:'Chuyến đi đầu tiên của hai đứa.'},
-    {img:'', date:'19.06', title:'Kỷ niệm 6', text:'Một ngày bình thường mà thật đặc biệt.'},
-    {img:'', date:'23.07', title:'Kỷ niệm 7', text:'Khoảnh khắc mình muốn giữ mãi.'},
-    {img:'', date:'15.08', title:'Kỷ niệm 8', text:'Cùng nhau qua bao buồn vui.'},
-    {img:'', date:'30.09', title:'Kỷ niệm 9', text:'Ánh mắt ấy anh không thể quên.'},
-    {img:'', date:'10.10', title:'Kỷ niệm 10', text:'Ngày mình nhận ra điều quan trọng nhất.'},
-    {img:'', date:'11.11', title:'Kỷ niệm 11', text:'Một lời hứa nhỏ giữa hai đứa.'},
-    {img:'', date:'25.12', title:'Kỷ niệm 12', text:'Và còn nhiều điều đang chờ phía trước ❤'},
+    {img:'images/km-01.jpg', date:'23.11.2025', title:'Buổi chạy bộ đầu tiên', text:'Hôm nay em và anh đi chạy bộ. Cũng là tấm hình đầu tiên hai đứa mình chụp chung với nhau.'},
+    {img:'images/km-02.jpg', date:'28.11.2025', title:'Tấm anh thích nhứt', text:'Hông hiểu sao anh lại cảm thấy thích tấm này nhứt ^^'},
+    {img:'images/km-03.jpg', date:'08.03.2026', title:'Quốc tế phụ nữ', text:'Quốc tế phụ nữ nè 💐'},
+    {img:'images/km-04.jpg', date:'05.04.2025', title:'1... 2... 3... cười!', text:'1 2 3 cười lênnn 😄'},
+    {img:'images/km-05.jpg', date:'02.07.2026', title:'Phố đi bộ TPHCM', text:'Hôm nay mình đi phố đi bộ kỉ niệm thành lập TPHCM, em thật xinh quá đii.'},
+    {img:'images/km-06.jpg', date:'05.04.2026', title:'Photobooth đôi mình', text:'Đi chụp thêm photobooth đi mà <3'},
+    {img:'images/km-07.jpg', date:'20.05.2026', title:'Khi trời giông bão', text:'Khi trời giông bão =))) mà vẫn có nhau.'},
+    {img:'images/km-08.jpg', date:'06.06.2026', title:'Vòng tay đôi', text:'Một hôm đi làm vòng tay đôi, vòng tay xinh mờ phải hem 💍'},
+    {img:'images/km-09.jpg', date:'31.01.2026', title:'Hihi <3', text:'Hihi <3'},
+    {img:'images/km-10.jpg', date:'04.07.2026', title:'Sến súa một tí', text:'Một tí sến súa của anh. Mong em sẽ đọc nhé haha.'},
+    {img:'images/km-11.jpg', date:'24.12.2025', title:'Mê em lắm rùi', text:'Khúc này là mê em lắm rùi ó 💕'},
+    {img:'images/km-12.jpg', date:'25.04.2026', title:'Chụp hình cùng nhau', text:'Hãy chụp hình cùng nhau em nhé 📸'},
   ];
 
   const W=()=>stage.clientWidth, H=()=>stage.clientHeight;
@@ -738,29 +664,67 @@ function startPartyFx(){
   const group=new THREE.Group();
   scene.add(group);
 
-  // Tạo texture ảnh mẫu (gradient hồng + số + ngày)
-  function placeholderTexture(m,i){
-    const c=document.createElement('canvas'); c.width=c.height=256;
-    const x=c.getContext('2d');
-    const g=x.createLinearGradient(0,0,256,256);
-    const pal=[['#ff9ec4','#ffd6e4'],['#ff7aa2','#ffc2d6'],['#ff5c8a','#ff9ec4']][i%3];
-    g.addColorStop(0,pal[0]); g.addColorStop(1,pal[1]);
-    x.fillStyle=g; x.fillRect(0,0,256,256);
-    x.fillStyle='rgba(255,255,255,.95)';
-    x.font='bold 40px Quicksand,sans-serif'; x.textAlign='center';
-    x.fillText('❤',128,110);
-    x.font='600 26px Quicksand,sans-serif';
-    x.fillText('Ảnh '+(i+1),128,150);
-    x.font='500 22px Quicksand,sans-serif';
-    x.fillText(m.date,128,185);
-    return new THREE.CanvasTexture(c);
+  // Vẽ khung "card" bo góc + đổ bóng lên canvas, sau đó vẽ ảnh (hoặc mẫu) vào bên trong
+  function roundRect(ctx,x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.arcTo(x+w,y,x+w,y+h,r);
+    ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r);
+    ctx.arcTo(x,y,x+w,y,r);
+    ctx.closePath();
   }
-  function makeTexture(m,i){
-    if(m.img){
-      const t=new THREE.TextureLoader().load(m.img);
-      return t;
+  function drawCover(ctx,img,x,y,w,h){
+    const s=Math.max(w/img.width,h/img.height);
+    const iw=img.width*s, ih=img.height*s;
+    ctx.drawImage(img,x+(w-iw)/2,y+(h-ih)/2,iw,ih);
+  }
+  function drawCardTexture(canvas,m,i,img){
+    const size=canvas.width;
+    const ctx=canvas.getContext('2d');
+    ctx.clearRect(0,0,size,size);
+    ctx.save();
+    ctx.shadowColor='rgba(122,59,82,.4)';
+    ctx.shadowBlur=size*0.07;
+    ctx.shadowOffsetY=size*0.03;
+    roundRect(ctx,size*0.05,size*0.05,size*0.9,size*0.9,size*0.09);
+    ctx.fillStyle='#fff';
+    ctx.fill();
+    ctx.restore();
+    const pad=size*0.09;
+    ctx.save();
+    roundRect(ctx,pad,pad,size-pad*2,size-pad*2,size*0.06);
+    ctx.clip();
+    if(img){
+      drawCover(ctx,img,pad,pad,size-pad*2,size-pad*2);
+    }else{
+      const g=ctx.createLinearGradient(pad,pad,size-pad,size-pad);
+      const pal=[['#ff9ec4','#ffd6e4'],['#ff7aa2','#ffc2d6'],['#ff5c8a','#ff9ec4']][i%3];
+      g.addColorStop(0,pal[0]); g.addColorStop(1,pal[1]);
+      ctx.fillStyle=g; ctx.fillRect(pad,pad,size-pad*2,size-pad*2);
+      ctx.fillStyle='rgba(255,255,255,.95)'; ctx.textAlign='center';
+      ctx.font='bold '+(size*0.16)+'px Quicksand,sans-serif';
+      ctx.fillText('❤',size/2,size*0.44);
+      ctx.font='600 '+(size*0.1)+'px Quicksand,sans-serif';
+      ctx.fillText('Ảnh '+(i+1),size/2,size*0.6);
+      ctx.font='500 '+(size*0.09)+'px Quicksand,sans-serif';
+      ctx.fillText(m.date,size/2,size*0.73);
     }
-    return placeholderTexture(m,i);
+    ctx.restore();
+  }
+  function makeCardTexture(m,i){
+    const size=320;
+    const canvas=document.createElement('canvas');
+    canvas.width=canvas.height=size;
+    drawCardTexture(canvas,m,i,null);
+    const tex=new THREE.CanvasTexture(canvas);
+    if(m.img){
+      const img=new Image();
+      img.crossOrigin='anonymous';
+      img.onload=()=>{ drawCardTexture(canvas,m,i,img); tex.needsUpdate=true; };
+      img.src=m.img;
+    }
+    return tex;
   }
 
   const tiles=[];
@@ -772,7 +736,7 @@ function startPartyFx(){
     const rad=Math.sqrt(1-y*y);
     const theta=Math.PI*(3-Math.sqrt(5))*i;
     const x=Math.cos(theta)*rad, z=Math.sin(theta)*rad;
-    const tex=makeTexture(memories[i],i);
+    const tex=makeCardTexture(memories[i],i);
     const mat=new THREE.MeshBasicMaterial({map:tex,side:THREE.DoubleSide,transparent:true});
     const size=58;
     const tile=new THREE.Mesh(new THREE.PlaneGeometry(size,size),mat);
@@ -780,12 +744,6 @@ function startPartyFx(){
     tile.lookAt(0,0,0);
     tile.scale.x=-1; // vì lookAt làm ảnh bị lật
     tile.userData=memories[i];
-    // viền trắng
-    const border=new THREE.Mesh(new THREE.PlaneGeometry(size+8,size+8),
-      new THREE.MeshBasicMaterial({color:0xffffff,side:THREE.DoubleSide,transparent:true,opacity:.9}));
-    border.position.copy(tile.position);
-    border.lookAt(0,0,0); border.position.multiplyScalar(0.985);
-    group.add(border);
     group.add(tile);
     tiles.push(tile);
   }
@@ -797,7 +755,6 @@ function startPartyFx(){
     if(!drag)return;
     const dx=x-lx,dy=y-ly;lx=x;ly=y;moved+=Math.abs(dx)+Math.abs(dy);
     tY+=dx*0.006; tX+=dy*0.006;
-    tX=Math.max(-1.2,Math.min(1.2,tX));
   }
   function up(){drag=false;stage.classList.remove('grabbing');}
   renderer.domElement.addEventListener('mousedown',e=>down(e.clientX,e.clientY));
@@ -821,7 +778,6 @@ function startPartyFx(){
       const mp=document.getElementById('modalPhoto');
       mp.innerHTML = d.img ? '<img src="'+d.img+'" alt="">' : ('📷 '+d.title);
       document.getElementById('modalDate').textContent=d.date;
-      document.getElementById('modalTitle').textContent=d.title;
       document.getElementById('modalText').textContent=d.text;
       modal.classList.add('show');
     }
@@ -907,11 +863,18 @@ function startPartyFx(){
   const gate=document.getElementById('albumGate');
   const btn=document.getElementById('cardOpenBtn');
   const cover=document.getElementById('albumCover');
-  if(!gate||!btn||!cover) return;
+  const peek=document.getElementById('cardPeek');
+  const content=document.getElementById('albumContent');
+  if(!gate||!btn||!cover||!peek||!content) return;
   btn.addEventListener('click',()=>{
     if(gate.classList.contains('opened')) return;
-    gate.classList.add('opened');
-    setTimeout(()=>{ cover.style.display='none'; },1050);
+    peek.style.maxHeight=peek.scrollHeight+'px';
+    const fullHeight=content.scrollHeight;
+    requestAnimationFrame(()=>{
+      gate.classList.add('opened');
+      peek.style.maxHeight=fullHeight+'px';
+    });
+    setTimeout(()=>{ cover.style.display='none'; peek.style.maxHeight='none'; },950);
   });
 })();
 
