@@ -76,7 +76,7 @@
     min-height:100vh;
   }
   #main.show{opacity:1;transform:none;}
-  #fx-layer{position:fixed;inset:0;pointer-events:none;z-index:5;overflow:hidden;}
+  #fx-layer{position:fixed;inset:0;pointer-events:none;z-index:7;overflow:hidden;}
 
   .wrap{max-width:1000px;margin:0 auto;padding:0 22px;}
   section{position:relative;z-index:6;padding:clamp(56px,10vw,110px) 0;}
@@ -107,7 +107,7 @@
     background:linear-gradient(135deg,var(--pink-3),#ffd6e4);
     display:flex;align-items:center;justify-content:center;color:#fff;
   }
-  .slide::after{content:"Thay ảnh của em vào đây 📷";position:absolute;
+  .slide:not(:has(img))::after{content:"Thay ảnh của em vào đây 📷";position:absolute;
     font-size:14px;font-weight:600;opacity:.9;text-align:center;padding:0 20px;}
   .slide img{width:100%;height:100%;object-fit:cover;}
   .slider-nav{
@@ -350,7 +350,7 @@
   .card-peek{overflow:hidden;transition:max-height .9s cubic-bezier(.65,.05,.3,1);}
   .card-content{transition:opacity .8s ease .35s, transform .8s ease .35s;}
   .card-cover{position:absolute;top:0;left:50%;transform:translateX(-50%);
-    width:min(360px,86vw);height:clamp(420px,62vh,540px);
+    width:min(360px,86vw);height:clamp(300px,42vh,380px);
     z-index:30;perspective:1800px;
     border-radius:28px;overflow:hidden;box-shadow:0 24px 60px rgba(232,93,132,.28);}
   .card-panel{position:absolute;top:0;bottom:0;width:50%;
@@ -375,7 +375,7 @@
   .card-open-btn:hover{transform:translateY(-2px);}
   .card-open-btn:active{transform:scale(.96);}
 
-  .card-gate:not(.opened) .card-peek{max-height:clamp(420px,62vh,540px);}
+  .card-gate:not(.opened) .card-peek{max-height:clamp(300px,42vh,380px);}
   .card-gate.opened .card-content{opacity:1;transform:none;}
   .card-gate:not(.opened) .card-content{opacity:0;transform:scale(.97);}
   .card-gate.opened .card-cover{pointer-events:none;}
@@ -565,9 +565,17 @@
       <div class="photo-slider" id="photoSlider">
         <div class="slider-viewport">
           <div class="slider-track" id="sliderTrack">
-            <div class="slide"><!-- <img src="anh1.jpg" alt=""> --></div>
-            <div class="slide"><!-- <img src="anh2.jpg" alt=""> --></div>
-            <div class="slide"><!-- <img src="anh3.jpg" alt=""> --></div>
+            <div class="slide"><img src="images/photo_01.jpg" alt=""></div>
+            <div class="slide"><img src="images/photo_02.jpg" alt=""></div>
+            <div class="slide"><img src="images/photo_03.jpg" alt=""></div>
+            <div class="slide"><img src="images/photo_04.jpg" alt=""></div>
+            <div class="slide"><img src="images/photo_05.jpg" alt=""></div>
+            <div class="slide"><img src="images/photo_06.jpg" alt=""></div>
+            <div class="slide"><img src="images/photo_07.jpg" alt=""></div>
+            <div class="slide"><img src="images/photo_08.jpg" alt=""></div>
+            <div class="slide"><img src="images/photo_09.jpg" alt=""></div>
+            <div class="slide"><img src="images/photo_10.jpg" alt=""></div>
+            <div class="slide"><img src="images/photo_11.jpg" alt=""></div>
           </div>
         </div>
         <button class="slider-nav prev" id="sliderPrev" type="button" aria-label="Ảnh trước">‹</button>
@@ -859,6 +867,7 @@
       setTimeout(()=>{introEl.style.display='none';document.getElementById('warp').style.opacity='0';},1200);
       startPartyFx();
       if(window.startAlbum) window.startAlbum();   // tự phát nhạc
+      if(window.startPhotoSlider) window.startPhotoSlider(); // về ảnh đầu & bắt đầu tự chuyển
     },500);
   }
 
@@ -1275,13 +1284,27 @@ function startPartyFx(){
     track.style.transform='translateX('+(-index*100)+'%)';
     dots.forEach((d,i)=>d.classList.toggle('active',i===index));
   }
-  function goTo(i){ index=(i+count)%count; update(); }
+  function goTo(i){ index=(i+count)%count; update(); scheduleAutoplay(); }
   function next(){ goTo(index+1); }
   function prev(){ goTo(index-1); }
+
+  // Tự động chuyển ảnh sau mỗi 8s, đặt lại khi có tương tác thủ công
+  const AUTOPLAY_MS=8000;
+  let autoplayTimer=null;
+  function scheduleAutoplay(){
+    clearTimeout(autoplayTimer);
+    if(count>1) autoplayTimer=setTimeout(next,AUTOPLAY_MS);
+  }
+  slider.addEventListener('mouseenter',()=>clearTimeout(autoplayTimer));
+  slider.addEventListener('mouseleave',scheduleAutoplay);
 
   prevBtn.addEventListener('click',prev);
   nextBtn.addEventListener('click',next);
   update();
+
+  // Chỉ bắt đầu đếm giờ tự chuyển khi đã vào trang chính; mỗi lần vào lại thì về ảnh đầu tiên
+  window.startPhotoSlider=function(){ index=0; update(); scheduleAutoplay(); };
+  window.pausePhotoSlider=function(){ clearTimeout(autoplayTimer); };
 
   // Vuốt để chuyển ảnh
   let startX=0, dragging=false;
@@ -1313,6 +1336,7 @@ function startPartyFx(){
   const peek=document.getElementById('cardPeek');
   const content=document.getElementById('albumContent');
   if(!gate||!btn||!cover||!peek||!content) return;
+  const albumSection=gate.closest('section');
   btn.addEventListener('click',()=>{
     if(gate.classList.contains('opened')) return;
     peek.style.maxHeight=peek.scrollHeight+'px';
@@ -1321,13 +1345,18 @@ function startPartyFx(){
       gate.classList.add('opened');
       peek.style.maxHeight=fullHeight+'px';
     });
-    setTimeout(()=>{ cover.style.display='none'; peek.style.maxHeight='none'; },950);
+    setTimeout(()=>{
+      cover.style.display='none';
+      peek.style.maxHeight='none';
+      if(albumSection) albumSection.scrollIntoView({behavior:'smooth',block:'center'});
+    },950);
   });
 })();
 
 /* ---------- NÚT QUAY LẠI INTRO ---------- */
 document.getElementById('backIntro').addEventListener('click',()=>{
   if(window.pauseAlbum) window.pauseAlbum();
+  if(window.pausePhotoSlider) window.pausePhotoSlider();
   if(window.returnToIntro) window.returnToIntro();
 });
 </script>
