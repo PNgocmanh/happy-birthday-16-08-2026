@@ -453,6 +453,42 @@
   .playlist button.active{background:var(--pink-2);border-color:var(--rose-deep);font-weight:600;}
   .music-hint{font-size:12px;color:#c79aab;margin-top:14px;}
 
+  /* Hiệu ứng bất ngờ khi nổ hết bong bóng + tắt nến */
+  .cake.celebrate{animation:cakeGlow 1s ease-in-out infinite;}
+  @keyframes cakeGlow{
+    0%,100%{filter:drop-shadow(0 0 0 rgba(255,200,120,0)) brightness(1);}
+    50%{filter:drop-shadow(0 0 30px rgba(255,200,120,.8)) brightness(1.18);}
+  }
+  .celebration-banner{
+    position:fixed;top:18px;left:50%;transform:translateX(-50%) translateY(-40px);
+    white-space:nowrap;font-family:'Playfair Display',serif;font-style:italic;font-weight:700;
+    font-size:clamp(15px,3.8vw,20px);color:#fff;
+    background:linear-gradient(120deg,var(--rose),var(--rose-deep));
+    padding:10px 24px;border-radius:30px;box-shadow:0 16px 34px rgba(232,93,132,.45);
+    opacity:0;pointer-events:none;transition:opacity .5s ease, transform .5s ease;
+    z-index:65;
+  }
+  .celebration-banner.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .surprise-overlay{
+    position:fixed;inset:0;z-index:60;display:none;
+    align-items:center;justify-content:center;padding:24px;
+    background:rgba(122,59,82,.45);backdrop-filter:blur(6px);
+  }
+  .surprise-overlay.show{display:flex;animation:modalIn .4s ease;}
+  .surprise-card{
+    position:relative;max-width:380px;width:100%;background:#fff;border-radius:26px;
+    padding:clamp(28px,6vw,36px) clamp(22px,5vw,30px);text-align:center;
+    box-shadow:0 30px 70px rgba(232,93,132,.4);
+  }
+  .surprise-icon{font-size:clamp(44px,10vw,58px);margin-bottom:10px;animation:beat 1.6s ease-in-out infinite;}
+  .surprise-card h3{font-family:'Playfair Display',serif;font-size:clamp(19px,4.6vw,24px);
+    color:var(--plum);margin-bottom:12px;line-height:1.4;}
+  .surprise-card p{font-size:14px;line-height:1.75;color:#8a5266;}
+  .surprise-close{
+    position:absolute;top:12px;right:12px;width:32px;height:32px;border:none;border-radius:50%;
+    background:var(--pink-2);color:var(--rose-deep);font-weight:700;cursor:pointer;z-index:2;
+  }
+
   /* Footer */
   footer{text-align:center;padding:70px 20px 90px;position:relative;z-index:6;}
   footer .sign{font-family:'Dancing Script',cursive;
@@ -511,8 +547,8 @@
         <div class="balloon b2" data-wish="Chúc em luôn vui vẻ, cười thật nhiều 😊"><span class="balloon-shine"></span></div>
         <div class="balloon b3" data-wish="Chúc em thật nhiều sức khỏe 💪"><span class="balloon-shine"></span></div>
         <div class="balloon b4" data-wish="Mong em luôn bình an mỗi ngày 🌿"><span class="balloon-shine"></span></div>
-        <div class="balloon b5" data-wish="Anh yêu em rất nhiều ❤️"><span class="balloon-shine"></span></div>
-        <div class="balloon b6" data-wish="Chúc em tuổi mới thật rực rỡ ✨"><span class="balloon-shine"></span></div>
+        <div class="balloon b5" data-wish="Mong mọi điều tốt đẹp nhất đến với em ❤️"><span class="balloon-shine"></span></div>
+        <div class="balloon b6" data-wish="Tuổi mới thật rực rỡ ✨"><span class="balloon-shine"></span></div>
 
         <div class="cake">
           <div class="candle" id="candle" role="button" tabindex="0" aria-label="Bấm để thổi nến">
@@ -521,9 +557,8 @@
             <span class="smoke"></span>
             <div class="candle-wish" id="candleWish">
               <p>Chúc em tuổi mới thật nhiều sức khỏe, luôn vui vẻ và bình an.
-                Mong em sẽ kiên định với những thứ mình chọn, anh tin em.
-                Cảm ơn em vì đã ở bên, yêu thương và cùng anh đi qua mỗi ngày.
-                Mong rằng năm nay và mãi về sau, chúng ta vẫn nắm tay nhau đi thật xa.</p>
+                Mong em sẽ kiên định với những thứ mình chọn, anh tin em. Và mọi dự định 
+                của em sẽ thành hiện thực, và anh sẽ luôn ở bên để cùng em đi qua mọi điều.</p>
               <span class="wish-hint">Bấm vào nến để thắp lại nhé 🕯️</span>
             </div>
           </div>
@@ -669,6 +704,19 @@
     <button class="back-intro" id="backIntro">🌌 Quay lại không gian</button>
   </footer>
 </main>
+
+<!-- BĂNG RÔN + THÔNG ĐIỆP BÍ MẬT KHI MỞ HẾT BONG BÓNG + NẾN -->
+<div class="celebration-banner" id="celebrationBanner">🎉 Em đã tìm ra hết bí mật rồi! 🎉</div>
+<div class="surprise-overlay" id="surpriseOverlay">
+  <div class="surprise-card">
+    <button class="surprise-close" id="surpriseClose" type="button" aria-label="Đóng">✕</button>
+    <div class="surprise-icon">🎊</div>
+    <h3>Em đã tìm ra hết những điều bí mật rồi!</h3>
+    <p>Cảm ơn em vì đã kiên nhẫn mở từng chiếc bong bóng và ngọn nến bé nhỏ.
+      Mong em sẽ dùng quyền "Anh ơi" thật nhiều để anh có cơ hội được ở bên em, 
+      yêu thương và chăm sóc em thêm nhiều hơn nữa. Anh yêu em thật nhiều ❤️</p>
+  </div>
+</div>
 
 <!-- ================= SCRIPTS ================= -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -1200,7 +1248,12 @@ function startPartyFx(){
   function toggleCandle(){
     const opening=!candle.classList.contains('blown');
     candle.classList.toggle('blown');
-    if(opening && window.hideWishToast) window.hideWishToast(); // chỉ hiện một lời chúc tại một thời điểm
+    if(opening){
+      if(window.hideWishToast) window.hideWishToast(); // chỉ hiện một lời chúc tại một thời điểm
+      if(window.allBalloonsPopped && window.allBalloonsPopped() && window.triggerSurpriseCelebration){
+        window.triggerSurpriseCelebration(); // đã nổ hết bong bóng + tắt nến -> bất ngờ đặc biệt
+      }
+    }
   }
   candle.addEventListener('click',toggleCandle);
   candle.addEventListener('keydown',e=>{
@@ -1245,17 +1298,75 @@ function startPartyFx(){
       setTimeout(()=>p.remove(),700);
     }
   }
+  const allBalloons=[...document.querySelectorAll('.balloon')];
   function popBalloon(el){
     if(el.classList.contains('popped')) return;
     el.classList.add('popped');
     spawnBurst(el);
     showWishToast(el.dataset.wish||'Chúc em sinh nhật vui vẻ 🎈');
     if(candle) candle.classList.remove('blown'); // tắt lời chúc của nến, đốt lại nến
-    setTimeout(()=>el.classList.remove('popped'),1600);
-  }
+    setTimeout(()=>el.classList.remove('popped'),2000);
+    }
   document.querySelectorAll('.balloon').forEach(b=>{
     b.addEventListener('click',()=>popBalloon(b));
   });
+  window.allBalloonsPopped=function(){ return allBalloons.every(b=>b.classList.contains('popped')); };
+})();
+
+/* ---------- BẤT NGỜ ĐẶC BIỆT: NỔ HẾT BONG BÓNG + TẮT NẾN ---------- */
+(function(){
+  const overlay=document.getElementById('surpriseOverlay');
+  const closeBtn=document.getElementById('surpriseClose');
+  const banner=document.getElementById('celebrationBanner');
+  const cakeEl=document.querySelector('.cake');
+  if(!overlay) return;
+
+  function closeOverlay(){ overlay.classList.remove('show'); }
+  if(closeBtn) closeBtn.addEventListener('click',closeOverlay);
+  overlay.addEventListener('click',e=>{ if(e.target===overlay) closeOverlay(); });
+
+  const CONFETTI_COLORS=['#ff7aa2','#ffc2d6','#e85d84','#fff','#ffdf8a'];
+  function fireConfetti(){
+    if(typeof confetti!=='function') return;
+    const end=Date.now()+1600;
+    (function frame(){
+      confetti({particleCount:6,angle:60,spread:70,origin:{x:0},colors:CONFETTI_COLORS});
+      confetti({particleCount:6,angle:120,spread:70,origin:{x:1},colors:CONFETTI_COLORS});
+      if(Date.now()<end) requestAnimationFrame(frame);
+    })();
+    confetti({particleCount:150,spread:100,origin:{y:.5},colors:CONFETTI_COLORS});
+  }
+
+  function burstHearts(){
+    const layer=document.getElementById('fx-layer');
+    if(!layer) return;
+    const emojis=['❤','🌸','💕','✨','🎉'];
+    for(let i=0;i<26;i++){
+      const el=document.createElement('div');
+      el.className='fall';
+      el.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+      el.style.left=Math.random()*100+'vw';
+      el.style.fontSize=(16+Math.random()*22)+'px';
+      const d=3+Math.random()*3;
+      el.style.animationDuration=d+'s';
+      layer.appendChild(el);
+      setTimeout(()=>el.remove(),d*1000);
+    }
+  }
+
+  window.triggerSurpriseCelebration=function(){
+    fireConfetti();
+    burstHearts();
+    if(cakeEl){
+      cakeEl.classList.add('celebrate');
+      setTimeout(()=>cakeEl.classList.remove('celebrate'),4000);
+    }
+    if(banner){
+      banner.classList.add('show');
+      setTimeout(()=>banner.classList.remove('show'),4000);
+    }
+    overlay.classList.add('show');
+  };
 })();
 
 /* ---------- SLIDER ẢNH ---------- */
