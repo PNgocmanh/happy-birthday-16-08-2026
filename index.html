@@ -1221,6 +1221,7 @@ function startPartyFx(){
   const trackSub=document.getElementById('trackSub');
   const list=[...document.querySelectorAll('#playlist button')];
   let current=0;
+  const volumes=[1,0.6,1,1]; // bài số 2 to hơn hẳn nên giảm âm lượng riêng
 
   function setInfo(i){
     current=i;
@@ -1231,6 +1232,7 @@ function startPartyFx(){
   function play(i){
     setInfo(i);
     audio.src=list[i].dataset.src;
+    audio.volume=volumes[i]??1;
     audio.play().catch(()=>{
       trackSub.textContent='Chạm nút ▶ để phát nhạc nhé';
     });
